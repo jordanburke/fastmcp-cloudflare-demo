@@ -2,6 +2,7 @@
 *.iml
 lib
 dist
+.wrangler/
 
 ### Node template
 # Logs

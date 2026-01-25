@@ -12,6 +12,9 @@
   "author": "jordan.burke@gmail.com",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "validate": "ts-builds validate",
     "format": "ts-builds format",
