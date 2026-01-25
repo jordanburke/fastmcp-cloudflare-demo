@@ -4,16 +4,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a TypeScript library template designed to be cloned/forked for creating new npm packages. It uses the `ts-builds` toolchain for standardized build scripts and dual module format support (CommonJS + ES modules).
+FastMCP Edge Demo - A demonstration of FastMCP running on Cloudflare Workers edge runtime.
 
-**Template Usage**: See STANDARDIZATION_GUIDE.md for applying this pattern to other TypeScript projects.
+**Deployed at**: https://fastmcp.jordanhburke.com
+
+This project showcases FastMCP's edge runtime capabilities, running entirely on Cloudflare Workers with no Node.js dependencies.
 
 ## Development Commands
 
-All commands delegate to `ts-builds` for consistency across projects:
+### Code Quality (via ts-builds)
 
 ```bash
-pnpm validate        # Main command: format + lint + test + build (use before commits)
+pnpm validate        # Main command: format + lint + typecheck (use before commits)
 
 pnpm format          # Format code with Prettier
 pnpm format:check    # Check formatting only
@@ -21,77 +23,60 @@ pnpm format:check    # Check formatting only
 pnpm lint            # Fix ESLint issues
 pnpm lint:check      # Check ESLint issues only
 
-pnpm test            # Run tests once
-pnpm test:watch      # Run tests in watch mode
-pnpm test:coverage   # Run tests with coverage
-
-pnpm build           # Production build (outputs to dist/)
-pnpm dev             # Development build with watch mode
-
 pnpm typecheck       # Check TypeScript types
 ```
 
-### Running a Single Test
+### Cloudflare Workers (via wrangler)
 
 ```bash
-pnpm test -- --testNamePattern="pattern"    # Filter by test name
-pnpm test -- test/specific.spec.ts          # Run specific file
+pnpm dev             # Start local development server at http://localhost:8787
+pnpm deploy          # Deploy to Cloudflare Workers
+pnpm tail            # Stream logs from deployed worker
 ```
 
 ## Architecture
 
-### Build System: ts-builds + tsdown
+### Runtime: Cloudflare Workers (V8 Isolates)
 
-- **ts-builds**: Centralized toolchain package providing all build scripts
-- **tsdown**: Underlying bundler (successor to tsup) configured via `ts-builds/tsdown`
-- **Configuration**: `tsdown.config.ts` imports default config from ts-builds
-- **TypeScript**: `tsconfig.json` extends `ts-builds/tsconfig`
-- **Prettier**: Uses `ts-builds/prettier` shared config
+- **EdgeFastMCP**: Edge-compatible FastMCP class from `@jordanburke/fastmcp/edge`
+- **Stateless**: No session persistence - each request is independent
+- **wrangler**: Cloudflare's CLI for local dev and deployment
 
-### Output Format
+### Build System
 
-- **dist/**: Production builds containing:
-  - `index.cjs` - CommonJS format
-  - `index.mjs` - ES modules format
-  - `index.d.mts` - TypeScript declarations
-- **lib/**: Development builds (also published)
-
-### Package Exports
-
-```json
-{
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.mts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    }
-  }
-}
-```
-
-### Testing: Vitest
-
-- Tests located in `test/*.spec.ts`
-- Uses Vitest with configuration from ts-builds
-- Coverage via v8 provider
+- **ts-builds**: Provides lint/format/typecheck tooling
+- **wrangler**: Handles bundling and deployment (not tsdown)
+- **TypeScript**: `tsconfig.json` extends `ts-builds/tsconfig` with Cloudflare types
 
 ## Key Files
 
-- `src/index.ts` - Main library entry point
-- `test/*.spec.ts` - Test files
-- `tsdown.config.ts` - Build config (imports from ts-builds)
-- `tsconfig.json` - TypeScript config (extends ts-builds)
-- `.claude/skills/typescript-standards/` - Claude Code skill for applying these standards
+- `src/index.ts` - Main server entry point with tools, resources, and prompts
+- `wrangler.toml` - Cloudflare Workers configuration
+- `tsconfig.json` - TypeScript config with Cloudflare Workers types
 
-## Publishing
+## MCP Features Demonstrated
+
+### Tools
+
+- `greet` - Greet someone by name
+- `echo` - Echo back input text
+- `get_datetime` - Get current date/time with timezone support
+
+### Resources
+
+- `info://server` - Server information (JSON)
+- `info://fastmcp` - FastMCP project info (Markdown)
+
+### Prompts
+
+- `analyze_code` - Code analysis prompt template
+
+## Testing the Deployment
 
 ```bash
-npm version patch|minor|major
-npm publish --access public
-```
+# Health check
+curl https://fastmcp.jordanhburke.com/health
 
-The `prepublishOnly` hook automatically runs `pnpm validate` before publishing.
+# MCP endpoint (use with MCP client)
+# SSE endpoint: https://fastmcp.jordanhburke.com/sse
+```
