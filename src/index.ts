@@ -3,6 +3,10 @@
  *
  * A demonstration of FastMCP running on Cloudflare Workers edge runtime.
  * Deployed at: https://fastmcp.jordanhburke.com
+ *
+ * Features demonstrated:
+ * - MCP Tools, Resources, and Prompts
+ * - Custom HTTP routes alongside MCP endpoints (Issue #160)
  */
 
 import { EdgeFastMCP } from "@jordanburke/fastmcp/edge"
@@ -13,6 +17,148 @@ const server = new EdgeFastMCP({
   name: "FastMCP Edge Demo",
   version: "1.0.0",
 })
+
+// =============================================================================
+// CUSTOM HTTP ROUTES (Issue #160)
+// Access the underlying Hono app to add REST endpoints alongside MCP
+// =============================================================================
+
+const app = server.getApp()
+
+// Landing page with documentation
+app.get("/", (c) => {
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FastMCP Edge Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; background: #0a0a0a; color: #e5e5e5; }
+    .container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+    h1 { font-size: 2.5rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .subtitle { color: #888; margin-bottom: 2rem; }
+    .badge { display: inline-block; background: #1a1a2e; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; color: #667eea; margin-right: 0.5rem; }
+    section { background: #111; border: 1px solid #222; border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 1.5rem; }
+    h2 { font-size: 1.25rem; margin-bottom: 1rem; color: #fff; }
+    .endpoint { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; border-bottom: 1px solid #222; }
+    .endpoint:last-child { border-bottom: none; }
+    .method { font-weight: 600; font-size: 0.75rem; padding: 0.125rem 0.5rem; border-radius: 0.25rem; }
+    .get { background: #065f46; color: #6ee7b7; }
+    .post { background: #1e40af; color: #93c5fd; }
+    .path { font-family: monospace; color: #a5b4fc; }
+    .desc { color: #888; font-size: 0.875rem; margin-left: auto; }
+    code { background: #1a1a2e; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875rem; }
+    pre { background: #1a1a2e; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.875rem; }
+    a { color: #667eea; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .feature { background: #1a1a2e; padding: 1rem; border-radius: 0.5rem; }
+    .feature h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+    .feature p { font-size: 0.875rem; color: #888; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>FastMCP Edge Demo</h1>
+    <p class="subtitle">MCP server running on Cloudflare Workers</p>
+    <div style="margin-bottom: 2rem;">
+      <span class="badge">Edge Runtime</span>
+      <span class="badge">Stateless</span>
+      <span class="badge">V8 Isolates</span>
+    </div>
+
+    <section>
+      <h2>Features Demonstrated</h2>
+      <div class="features">
+        <div class="feature">
+          <h3>MCP Tools</h3>
+          <p>greet, echo, get_datetime</p>
+        </div>
+        <div class="feature">
+          <h3>MCP Resources</h3>
+          <p>Server info, project docs</p>
+        </div>
+        <div class="feature">
+          <h3>MCP Prompts</h3>
+          <p>Code analysis template</p>
+        </div>
+        <div class="feature">
+          <h3>Custom Routes</h3>
+          <p>REST API alongside MCP</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>HTTP Endpoints</h2>
+      <div class="endpoint"><span class="method get">GET</span> <span class="path">/</span> <span class="desc">This page</span></div>
+      <div class="endpoint"><span class="method get">GET</span> <span class="path">/health</span> <span class="desc">Health check</span></div>
+      <div class="endpoint"><span class="method get">GET</span> <span class="path">/sse</span> <span class="desc">MCP SSE endpoint</span></div>
+      <div class="endpoint"><span class="method post">POST</span> <span class="path">/sse</span> <span class="desc">MCP message endpoint</span></div>
+      <div class="endpoint"><span class="method get">GET</span> <span class="path">/api/info</span> <span class="desc">Server info (JSON)</span></div>
+      <div class="endpoint"><span class="method get">GET</span> <span class="path">/api/time</span> <span class="desc">Current time</span></div>
+    </section>
+
+    <section>
+      <h2>Connect with MCP Client</h2>
+      <pre>{
+  "mcpServers": {
+    "fastmcp-demo": {
+      "url": "https://fastmcp.jordanhburke.com/sse"
+    }
+  }
+}</pre>
+    </section>
+
+    <section>
+      <h2>Links</h2>
+      <p>
+        <a href="https://github.com/punkpeye/fastmcp">FastMCP on GitHub</a> •
+        <a href="https://github.com/punkpeye/fastmcp/issues/160">Custom Routes Issue #160</a> •
+        <a href="https://glama.ai/mcp">Documentation</a>
+      </p>
+    </section>
+  </div>
+</body>
+</html>`
+  return c.html(html)
+})
+
+// REST API endpoint - server info as JSON
+app.get("/api/info", (c) => {
+  return c.json({
+    name: "FastMCP Edge Demo",
+    version: "1.0.0",
+    runtime: "Cloudflare Workers",
+    features: ["tools", "resources", "prompts", "custom-routes"],
+    endpoints: {
+      mcp: "/sse",
+      health: "/health",
+      api: "/api/*",
+    },
+  })
+})
+
+// REST API endpoint - current time
+app.get("/api/time", (c) => {
+  const tz = c.req.query("tz") ?? "UTC"
+  try {
+    const formatted = new Intl.DateTimeFormat("en-US", {
+      dateStyle: "full",
+      timeStyle: "long",
+      timeZone: tz,
+    }).format(new Date())
+    return c.json({ timezone: tz, time: formatted, timestamp: Date.now() })
+  } catch {
+    return c.json({ error: `Invalid timezone: ${tz}` }, 400)
+  }
+})
+
+// =============================================================================
+// MCP TOOLS
+// =============================================================================
 
 // Tool: Greet someone
 server.addTool({

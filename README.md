@@ -10,6 +10,7 @@ A demonstration of [FastMCP](https://github.com/punkpeye/fastmcp) running on Clo
 - **Stateless MCP**: No session persistence - each request is independent
 - **Zero Node.js Dependencies**: Uses only edge-compatible APIs
 - **Full MCP Support**: Tools, Resources, and Prompts
+- **Custom HTTP Routes**: REST API endpoints alongside MCP ([Issue #160](https://github.com/punkpeye/fastmcp/issues/160))
 
 ## Quick Start
 
@@ -61,6 +62,26 @@ pnpm tail         # Stream logs from deployed worker
 | Name           | Description                   |
 | -------------- | ----------------------------- |
 | `analyze_code` | Code analysis prompt template |
+
+## Custom HTTP Routes
+
+FastMCP supports adding custom HTTP routes alongside MCP endpoints via `server.getApp()`:
+
+```typescript
+const app = server.getApp()
+
+app.get("/api/info", (c) => c.json({ name: "My Server" }))
+app.get("/api/time", (c) => c.json({ time: new Date().toISOString() }))
+```
+
+### Available REST Endpoints
+
+| Method | Path        | Description         |
+| ------ | ----------- | ------------------- |
+| GET    | `/`         | Landing page        |
+| GET    | `/health`   | Health check        |
+| GET    | `/api/info` | Server info (JSON)  |
+| GET    | `/api/time` | Current time (JSON) |
 
 ## Configuration
 
