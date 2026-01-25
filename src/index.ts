@@ -48,7 +48,10 @@ app.get("/", (c) => {
     .get { background: #065f46; color: #6ee7b7; }
     .post { background: #1e40af; color: #93c5fd; }
     .path { font-family: monospace; color: #a5b4fc; }
-    .desc { color: #888; font-size: 0.875rem; margin-left: auto; }
+    .desc { color: #888; font-size: 0.875rem; margin-left: auto; text-align: right; }
+    .issue-tag { font-size: 0.625rem; padding: 0.125rem 0.375rem; border-radius: 0.25rem; margin-left: 0.5rem; font-weight: 600; }
+    .issue-136 { background: #7c3aed; color: #e9d5ff; }
+    .issue-160 { background: #0891b2; color: #cffafe; }
     code { background: #1a1a2e; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875rem; }
     pre { background: #1a1a2e; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.875rem; }
     a { color: #667eea; text-decoration: none; }
@@ -93,12 +96,16 @@ app.get("/", (c) => {
 
     <section>
       <h2>HTTP Endpoints</h2>
-      <div class="endpoint"><span class="method get">GET</span> <span class="path">/</span> <span class="desc">This page</span></div>
+      <p style="font-size: 0.75rem; color: #666; margin-bottom: 1rem;">
+        <span class="issue-tag issue-136">#136</span> Cloudflare Workers support
+        <span class="issue-tag issue-160" style="margin-left: 1rem;">#160</span> Custom HTTP routes
+      </p>
+      <div class="endpoint"><span class="method get">GET</span> <span class="path">/</span> <span class="desc">This page<span class="issue-tag issue-160">#160</span></span></div>
       <div class="endpoint"><span class="method get">GET</span> <span class="path">/health</span> <span class="desc">Health check</span></div>
-      <div class="endpoint"><span class="method get">GET</span> <span class="path">/sse</span> <span class="desc">MCP SSE endpoint</span></div>
-      <div class="endpoint"><span class="method post">POST</span> <span class="path">/sse</span> <span class="desc">MCP message endpoint</span></div>
-      <div class="endpoint"><span class="method get">GET</span> <span class="path">/api/info</span> <span class="desc">Server info (JSON)</span></div>
-      <div class="endpoint"><span class="method get">GET</span> <span class="path">/api/time</span> <span class="desc">Current time</span></div>
+      <div class="endpoint"><span class="method get">GET</span> <span class="path">/mcp</span> <span class="desc">MCP HTTP Streamable<span class="issue-tag issue-136">#136</span></span></div>
+      <div class="endpoint"><span class="method post">POST</span> <span class="path">/mcp</span> <span class="desc">MCP messages<span class="issue-tag issue-136">#136</span></span></div>
+      <div class="endpoint"><span class="method get">GET</span> <span class="path">/api/info</span> <span class="desc">Server info (JSON)<span class="issue-tag issue-160">#160</span></span></div>
+      <div class="endpoint"><span class="method get">GET</span> <span class="path">/api/time</span> <span class="desc">Current time<span class="issue-tag issue-160">#160</span></span></div>
     </section>
 
     <section>
@@ -106,17 +113,20 @@ app.get("/", (c) => {
       <pre>{
   "mcpServers": {
     "fastmcp-demo": {
-      "url": "https://fastmcp.jordanhburke.com/sse"
+      "url": "https://fastmcp.jordanhburke.com/mcp"
     }
   }
 }</pre>
     </section>
 
     <section>
-      <h2>Links</h2>
+      <h2>GitHub Issues Addressed</h2>
+      <p style="margin-bottom: 1rem;">
+        <strong><a href="https://github.com/punkpeye/fastmcp/issues/136">Issue #136</a></strong>: Cloudflare Workers support (Kent C. Dodds request)<br>
+        <strong><a href="https://github.com/punkpeye/fastmcp/issues/160">Issue #160</a></strong>: Custom HTTP routes alongside MCP endpoints
+      </p>
       <p>
         <a href="https://github.com/punkpeye/fastmcp">FastMCP on GitHub</a> •
-        <a href="https://github.com/punkpeye/fastmcp/issues/160">Custom Routes Issue #160</a> •
         <a href="https://glama.ai/mcp">Documentation</a>
       </p>
     </section>
@@ -134,7 +144,7 @@ app.get("/api/info", (c) => {
     runtime: "Cloudflare Workers",
     features: ["tools", "resources", "prompts", "custom-routes"],
     endpoints: {
-      mcp: "/sse",
+      mcp: "/mcp",
       health: "/health",
       api: "/api/*",
     },
