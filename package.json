@@ -27,7 +27,7 @@
     "tail": "wrangler tail"
   },
   "dependencies": {
-    "@jordanburke/fastmcp": "^3.30.0",
+    "@jordanburke/fastmcp": "^3.30.1",
     "zod": "^3.25.76"
   },
   "devDependencies": {
