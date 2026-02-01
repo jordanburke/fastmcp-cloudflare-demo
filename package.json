@@ -27,13 +27,13 @@
     "tail": "wrangler tail"
   },
   "dependencies": {
-    "@jordanburke/fastmcp": "^3.30.2",
-    "zod": "^3.25.76"
+    "fastmcp": "^3.31.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260124.0",
-    "ts-builds": "^2.2.2",
-    "wrangler": "^4.60.0"
+    "@cloudflare/workers-types": "^4.20260130.0",
+    "ts-builds": "^2.3.2",
+    "wrangler": "^4.61.1"
   },
   "type": "module",
   "prettier": "ts-builds/prettier",

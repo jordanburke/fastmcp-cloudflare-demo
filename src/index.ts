@@ -9,7 +9,7 @@
  * - Custom HTTP routes alongside MCP endpoints (Issue #160)
  */
 
-import { EdgeFastMCP } from "@jordanburke/fastmcp/edge"
+import { EdgeFastMCP } from "fastmcp/edge"
 import { z } from "zod"
 
 const server = new EdgeFastMCP({
