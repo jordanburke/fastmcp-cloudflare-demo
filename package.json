@@ -31,9 +31,9 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260214.0",
+    "@cloudflare/workers-types": "^4.20260217.0",
     "ts-builds": "^2.4.0",
-    "wrangler": "^4.65.0"
+    "wrangler": "^4.66.0"
   },
   "type": "module",
   "prettier": "ts-builds/prettier",
