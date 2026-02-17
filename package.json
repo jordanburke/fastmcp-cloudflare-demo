@@ -1,6 +1,6 @@
 {
   "name": "fastmcp-cloudflare-demo",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "FastMCP Edge Demo - Cloudflare Workers deployment example",
   "keywords": [
     "fastmcp",
@@ -22,8 +22,8 @@
     "lint": "ts-builds lint",
     "lint:check": "ts-builds lint:check",
     "typecheck": "ts-builds typecheck",
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "dev": "bash scripts/build.sh dev",
+    "deploy": "bash scripts/build.sh deploy",
     "tail": "wrangler tail"
   },
   "dependencies": {

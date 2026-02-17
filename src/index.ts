@@ -12,10 +12,16 @@
 import { EdgeFastMCP } from "fastmcp/edge"
 import { z } from "zod"
 
+const buildInfo = {
+  version: __BUILD_VERSION__,
+  gitSha: __BUILD_GIT_SHA__,
+  buildTime: __BUILD_TIME__,
+}
+
 const server = new EdgeFastMCP({
   description: "FastMCP demo running on Cloudflare Workers edge runtime",
   name: "FastMCP Edge Demo",
-  version: "1.0.0",
+  version: buildInfo.version,
 })
 
 // =============================================================================
@@ -140,7 +146,7 @@ app.get("/", (c) => {
 app.get("/api/info", (c) => {
   return c.json({
     name: "FastMCP Edge Demo",
-    version: "1.0.0",
+    ...buildInfo,
     runtime: "Cloudflare Workers",
     features: ["tools", "resources", "prompts", "custom-routes"],
     endpoints: {
@@ -228,7 +234,7 @@ server.addResource({
         features: ["tools", "resources", "prompts"],
         name: "FastMCP Edge Demo",
         runtime: "Edge (V8 Isolates)",
-        version: "1.0.0",
+        ...buildInfo,
       },
       null,
       2,
