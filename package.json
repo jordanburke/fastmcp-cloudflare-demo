@@ -16,14 +16,14 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "validate": "ts-builds validate",
+    "validate": "node scripts/build-info.mjs && ts-builds validate",
     "format": "ts-builds format",
     "format:check": "ts-builds format:check",
     "lint": "ts-builds lint",
     "lint:check": "ts-builds lint:check",
     "typecheck": "ts-builds typecheck",
-    "dev": "bash scripts/build.sh dev",
-    "deploy": "bash scripts/build.sh deploy",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
     "tail": "wrangler tail"
   },
   "dependencies": {
