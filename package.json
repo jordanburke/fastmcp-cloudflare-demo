@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260217.0",
-    "ts-builds": "^2.4.0",
+    "ts-builds": "^2.5.0",
     "wrangler": "^4.66.0"
   },
   "type": "module",
