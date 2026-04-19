@@ -27,7 +27,7 @@
     "tail": "wrangler tail"
   },
   "dependencies": {
-    "fastmcp": "^3.33.0",
+    "fastmcp": "^4.0.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
