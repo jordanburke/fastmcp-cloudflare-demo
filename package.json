@@ -17,6 +17,7 @@
   },
   "scripts": {
     "validate": "node scripts/build-info.mjs && ts-builds validate",
+    "ci": "node scripts/build-info.mjs && ts-builds ci",
     "format": "ts-builds format",
     "format:check": "ts-builds format:check",
     "lint": "ts-builds lint",
@@ -32,10 +33,10 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260217.0",
-    "ts-builds": "^2.4.0",
+    "ts-builds": "^4.7.0",
     "wrangler": "^4.66.0"
   },
   "type": "module",
   "prettier": "ts-builds/prettier",
-  "packageManager": "pnpm@10.34.5+sha512.a4ee05f2f73658255bd6a89859c065a45c28a57daefae2c893a168ee2b73168c37b91e83e57ea67654ad03f03031746430e8bce38e362e042605fb8abc80192e"
+  "packageManager": "pnpm@12.21.0+sha512.66fd8278ee28935ce951792d34367ff3af5c432a2756445823029533835b8da529bbe0be5130afd56ed0713fb8789e47bad82d93bd5ae2fe54b15562d6276ef0"
 }

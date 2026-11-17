@@ -30,6 +30,7 @@ pnpm deploy
 ```bash
 # Code quality
 pnpm validate     # format + lint + typecheck
+pnpm run ci       # validate's checks without fixing, as CI runs them (type `run`: `pnpm ci` is a clean install)
 pnpm format       # Format with Prettier
 pnpm lint         # Fix ESLint issues
 pnpm typecheck    # Check TypeScript types
