@@ -16,6 +16,7 @@ This project showcases FastMCP's edge runtime capabilities, running entirely on 
 
 ```bash
 pnpm validate        # Main command: format + lint + typecheck (use before commits)
+pnpm run ci          # validate's checks without fixing, as CI runs them (type `run`: `pnpm ci` is a clean install)
 
 pnpm format          # Format code with Prettier
 pnpm format:check    # Check formatting only
